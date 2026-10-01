@@ -1,0 +1,26 @@
+# Skip heavy, binary, or sensitive folders
+mozilla/
+GIMP/
+dconf/
+glib-2.0/
+xfce4/
+pulse/
+opencode/
+
+# Skip temp/cache files
+*.log
+*.tmp
+gh/hosts.yml
+
+# local-only state
+chromium/
+menus/
+gh/
+yambar/
+*.default.bak
+
+# Superseded config copies — the live file is the one without these suffixes
+*.bak
+*.pre-caelestia-*
+# NOTE: kitty/current-theme.conf is tracked deliberately — kitty.conf includes it.
+# It is copied verbatim from dark-theme.auto.conf by the theme switcher.

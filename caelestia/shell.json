@@ -1,0 +1,19 @@
+{
+    "general": {
+        "showOverFullscreen": false,
+        "apps": {
+            "terminal": ["kitty"],
+            "audio": ["pavucontrol"],
+            "playback": ["mpv"],
+            "explorer": ["thunar"]
+        }
+    },
+    "paths": {
+        "wallpaperDir": "~/pictures"
+    },
+    "appearance": {
+        "transparency": {
+            "enabled": true
+        }
+    }
+}

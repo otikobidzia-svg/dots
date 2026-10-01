@@ -1,0 +1,324 @@
+# ~/.config/sway/config
+#
+# Sway 1.12 config, ported from ~/.config/hypr/hyprland.conf.
+#
+# Session: sddm -> dbus-run-session /usr/bin/sway (Alpine). There is no session
+# manager, so nothing reads ~/.config/autostart; everything session-level is
+# exec'd from here, with pgrep guards where a second instance would break.
+#
+# NOT ported, and why (checked before writing this):
+#   * blur / rounded corners / shadows / animations. Hyprland composites these
+#     itself; sway has no built-in equivalent and none of the wlroots forks that
+#     add it are installed (swayfx, wlrblur, swayblur, swww are all absent, and
+#     none are in the Alpine repos this box has). picom does NOT work here:
+#     it is X11-only (xrender/glx backends only, no Wayland backend in 12.5)
+#     and this is a Wayland session. So kitty's background_opacity 0.45 will
+#     render as plain transparency, not blurred. Installing swayfx is the fix
+#     if the blur matters.
+#   * `dwl`-style scratchpad "magic": sway's scratchpad is a plain bag of
+#     holding and maps cleanly, so it IS ported ($mod+s / $mod+Shift+s).
+#   * the Caelestia Shell drawer. The shell ships Hyprland and dwl backends
+#     only (checked share/caelestia-shell/services: Hypr.qml, no Sway.qml), so
+#     there is no drawer under sway. The launcher is rofi -show drun instead,
+#     which is what the Hyprland config already used for $menu.
+#   * the Hyprland animation/bezier block. No equivalent in sway.
+
+### Variables
+#
+# Mod4 == the Super/"Windows" key, same as $mod in the i3 config and $mainMod
+# (SUPER) in the Hyprland config.
+set $mod Mod4
+set $term kitty
+set $menu rofi -show drun
+set $fileManager thunar
+
+# Home-row direction keys. Both source configs collide on $mod+j: Hyprland binds
+# it to togglesplit (hyprland.conf line 285) and the i3 port binds it to "layout
+# toggle split" (i3 line 119). Sway rejects a bindsym defined twice, so the home
+# row skips "j" and the letters are taken straight from the i3 config, which had
+# already applied this exact remap:
+#
+#     $mod+h          -> left     (i3 line 78)
+#     $mod+k          -> down     (i3 line 79)
+#     $mod+l          -> up       (i3 line 80)
+#     $mod+semicolon  -> right    (i3 line 81)
+#
+# $mod+j therefore stays free for the split toggle below. The arrow keys are the
+# primary bindings and are never shadowed.
+set $left h
+set $down k
+set $up l
+
+include /etc/sway/config.d/*
+
+### Output
+#
+# Hyprland: monitor=,1920x1080@144,0x0,1  ->  sway is already at 1920x1080@144Hz
+# on eDP-1 (the panel reports refresh 144000 mHz), so this only pins it.
+output eDP-1 mode 1920x1080@144Hz position 0,0
+
+### Appearance
+#
+# Hyprland's general/decoration block asked for border_size 0 and no decoration,
+# which lines up with sway's default (no decorations, no borders). The
+# titlebar is the one thing sway adds by default, so turn it off and shrink
+# the title font to what the i3 config used.
+default_border none
+titlebar_border_thickness 0
+titlebar_padding 1 1 1 1
+font pango:monospace 8
+
+# focus_follows_mouse matches the Hyprland input block's follow_mouse = 1.
+focus_follows_mouse yes
+
+# Hyprland: env = XCURSOR_SIZE,30
+seat * xcursor_theme default 30
+
+### Input
+#
+# Hyprland input block: kb_layout us, natural_scroll false, and a per-device
+# sensitivity of -0.5 on the "epic-mouse-v1". Sway's identifier for that mouse
+# is the USB Receiver (the integrated ELAN touchpad reports as ELAN1203).
+input * xkb_layout us
+
+# Hyprland's input block set sensitivity = -0.5 on the mouse. This sway
+# (1.12-rc3) spells that knob `pointer_accel`, not `accel_speed` or the older
+# `pointer_accel_rate`; -1..1, same scale as Hyprland's.
+input type:pointer {
+    accel_profile flat
+    pointer_accel -0.5
+}
+
+# The "epic-mouse-v1" from the Hyprland config is the USB Receiver dongle here;
+# the integrated panel reports separately as ELAN1203.
+input "13947:6425:USB_Receiver_USB_Receiver" {
+    accel_profile flat
+    pointer_accel -0.5
+}
+
+input type:touchpad {
+    tap enabled
+    natural_scroll enabled
+    dwt enabled
+    middle_emulation enabled
+}
+
+### Keybindings
+#
+# --- basics -----------------------------------------------------------------
+bindsym $mod+Return exec $term
+bindsym $mod+e exec $fileManager
+bindsym $mod+Shift+e exec swaynag -t warning \
+    -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' \
+    -B 'Yes, exit sway' 'swaymsg exit'
+
+# Hyprland bind = $mainMod, Q, killactive  -> sway's kill
+bindsym $mod+q kill
+bindsym $mod+Shift+q kill
+
+# Hyprland bind = $mainMod, P, exec, ...hyprctl dispatch exit. swaymsg exit is
+# the equivalent; no confirmation nag, matching the Hyprland behaviour.
+bindsym $mod+p exec swaymsg exit
+
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+
+# Hyprland bind = $mainMod, Space, exec, $menu
+bindsym $mod+space exec $menu
+
+# Hyprland bind = $mainMod, B, exec, /usr/bin/firefox
+bindsym $mod+b exec /usr/bin/firefox
+
+# --- focus ------------------------------------------------------------------
+# Hyprland used movefocus l/r/u/d on the arrows. Sway's focus is the same thing.
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# "right" is $mod+semicolon, matching the i3 config, because $mod+j is the
+# split toggle in both source configs.
+bindsym $mod+semicolon focus right
+
+# --- move / resize windows --------------------------------------------------
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+bindsym $mod+Shift+semicolon move right
+
+# --- layout -----------------------------------------------------------------
+# Hyprland bind = $mainMod, X, togglefloating
+bindsym $mod+x floating toggle
+# i3 port used $mod+Shift+z for the same thing; keep it as a second binding.
+bindsym $mod+Shift+z floating toggle
+
+# Hyprland bind = $mainMod, J, layoutmsg, togglesplit, and the i3 config's
+# $mod+j layout toggle split (i3 line 119) are the same key, so use the real
+# toggle rather than forcing one orientation with splith/splitv.
+bindsym $mod+j layout toggle split
+# "toggle" only flips the current container, so keep the i3 config's explicit
+# orientation bindings too (i3 lines 105 and 108).
+bindsym $mod+Shift+j splitv
+bindsym $mod+v splitv
+bindsym $mod+Shift+v splith
+
+# NOTE: sway's defaults put stacking on $mod+s and tabbed on $mod+w, but $mod+s
+# is the scratchpad here (Hyprland's $mod+S) and $mod+space is the launcher
+# (Hyprland's $mod+Space). Stacking/tabbed move to the shifted variants the i3
+# port used, so nothing collides.
+bindsym $mod+Shift+t layout stacking
+bindsym $mod+Shift+w layout tabbed
+
+bindsym $mod+f fullscreen
+
+bindsym $mod+a focus parent
+
+# focus between tiled and floating areas. On $mod+Shift+space rather than
+# $mod+space, which is the launcher.
+bindsym $mod+Shift+space focus mode_toggle
+
+# Hyprland bindm = $mainMod, mouse:272/273 -> movewindow / resizewindow.
+# sway's floating_modifier does the same for both tiled and floating windows.
+floating_modifier $mod normal
+
+# --- scratchpad -------------------------------------------------------------
+# Hyprland bind = $mainMod, S, togglespecialworkspace, magic
+#                bind = $mainMod SHIFT, S, movetoworkspace, special:magic
+bindsym $mod+s scratchpad show
+bindsym $mod+Shift+s move scratchpad
+
+# --- workspaces -------------------------------------------------------------
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+# Hyprland bind = $mainMod, mouse_down/ mouse_up, workspace, e+1 / e-1
+bindsym $mod+button5 workspace next
+bindsym $mod+button4 workspace prev
+
+# --- screenshots ------------------------------------------------------------
+# Hyprland kept grim+slurp, which is Wayland-native, so it works here as-is.
+# The Caelestia one only does regions, hence the two bindings.
+bindsym Print exec caelestia screenshot
+bindsym $mod+Print exec grim -g "$(slurp)" - | wl-copy
+bindsym $mod+Shift+Print exec grim - | wl-copy
+
+# --- media / brightness -----------------------------------------------------
+# Hyprland bindel on XF86Audio*: wpctl against @DEFAULT_AUDIO_SINK@.
+bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+
+bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bindsym --locked XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+
+# Hyprland bindel XF86MonBrightness*: brightnessctl
+bindsym --locked XF86MonBrightnessUp exec brightnessctl -e4 -n2 set 5%+
+bindsym --locked XF86MonBrightnessDown exec brightnessctl -e4 -n2 set 5%-
+
+bindsym --locked XF86AudioPlay exec playerctl play-pause
+bindsym --locked XF86AudioPause exec playerctl play-pause
+bindsym --locked XF86AudioPrev exec playerctl previous
+bindsym --locked XF86AudioNext exec playerctl next
+bindsym --locked XF86AudioStop exec playerctl stop
+
+### Mode: resize
+#
+# Same bindings as the i3 config's "resize" mode, so the keys feel identical.
+mode "resize" {
+    bindsym j resize shrink width 10px or 10ppt
+    bindsym k resize grow height 10px or 10ppt
+    bindsym l resize shrink height 10px or 10ppt
+    bindsym semicolon resize grow width 10px or 10ppt
+
+    bindsym Left resize shrink width 10px or 10ppt
+    bindsym Down resize grow height 10px or 10ppt
+    bindsym Up resize shrink height 10px or 10ppt
+    bindsym Right resize grow width 10px or 10ppt
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+# Entering and leaving resize mode is $mod+r, matching the i3 config. It is not
+# repeated inside the mode block: that would define the same key twice, which
+# sway rejects as a duplicate bindsym.
+bindsym $mod+r mode "resize"
+
+### Status bar
+#
+# waybar, configured for sway in ~/.config/waybar/config.sway.jsonc (a copy of
+# the Hyprland one with the hyprland/* modules swapped for sway/*).
+bar {
+    # NOTE: no -i/-b bar-id flag. waybar 0.15.0 on this box rejects "-i" outright
+    # ("Unrecognised token: -i") and only accepts -b <id>, which sway does not
+    # need here. Verified: waybar runs and renders with just -c and -s.
+    swaybar_command waybar -c /home/otiko/.config/waybar/config.sway.jsonc \
+        -s /home/otiko/.config/waybar/style.sway.css
+    position top
+
+    colors {
+        statusline #c0caf5
+        background #1a1b26
+        inactive_workspace #1a1b26 #1a1b26 #414868
+        active_workspace #7aa2f7 #7aa2f7 #7aa2f7
+    }
+}
+
+### Session startup
+#
+# Mirrors the [session startup] block at the bottom of the i3 config: no session
+# manager, so this is the only place these get started. Each is guarded where a
+# duplicate instance would misbehave, so reload is safe.
+
+# Status bar. swaybar_command above already starts waybar; nothing extra needed.
+
+# Audio. Replaces ~/.config/autostart/pipewire.desktop, which never runs here.
+# pipewire/wireplumber are already up in the current session, so the guards
+# keep a reload from starting a second copy.
+exec --no-startup-id sh -c 'pgrep -x pipewire >/dev/null || pipewire'
+exec --no-startup-id sh -c 'pgrep -x wireplumber >/dev/null || wireplumber'
+
+# Wallpaper. waypaper is Wayland-native and was what the Hyprland config ran.
+# The i3 config used setwall instead because that paints the X11 root pixmap,
+# which does nothing here.
+exec --no-startup-id waypaper --restore
+
+# Input method. The Hyprland config never started ibus explicitly, but ibus is
+# installed and ~/.config/ibus exists, so start it here.
+exec --no-startup-id sh -c 'pgrep -x ibus-daemon >/dev/null || ibus-daemon -d'
+
+# Lock on idle. The i3 config used xss-lock + i3lock; swayidle + swaylock is
+# the equivalent. The screen blank and the lock fire together.
+exec --no-startup-id swayidle -w \
+         timeout 600 'swaylock -c 131317' \
+         timeout 900 'swaymsg "output eDP-1 power off"' resume 'swaymsg "output eDP-1 power on"' \
+         before-sleep 'swaylock -c 131317'
+
+# NOT started, deliberately:
+#   * picom — X11-only, and this is a Wayland session. It is in the i3 config
+#     because i3 has no compositor of its own. It also can't start here anyway:
+#     "Another composite manager is already running" (there is no _NET_WM_CM_S0
+#     owner, so that message is a stale-selection false positive, and the
+#     xrender backend has nothing to composite on a rootless Xwayland anyway).
+#   * xdg-desktop-portal — already running (pid 3563), started by the session.

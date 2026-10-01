@@ -1,0 +1,305 @@
+/* ------------------------------------------------------------------------- *
+ *  waybar style — Tokyo Night, floating pills
+ *
+ *  Every colour of the bar is defined here.  Swap the @define-color values to
+ *  re-theme the whole thing; the icon tints live in config.jsonc.
+ * ------------------------------------------------------------------------- */
+
+@define-color pill        rgba(26, 27, 38, 0.82);   /* capsule fill        */
+@define-color pill-hov    rgba(122, 162, 247, 0.16); /* capsule hover     */
+@define-color pill-line   rgba(125, 207, 255, 0.12); /* capsule border     */
+@define-color pill-line-h rgba(125, 207, 255, 0.34); /* border on hover    */
+@define-color fg          #c0caf5;                   /* primary text        */
+@define-color dim         #a9b1d6;                   /* secondary text      */
+@define-color mute        #565f89;                   /* inactive / icons    */
+@define-color accent      #7aa2f7;
+@define-color cyan        #7dcfff;
+@define-color green       #9ece6a;
+@define-color yellow      #e0af68;
+@define-color red         #f7768e;
+@define-color ink         #12141f;                   /* text on bright fill */
+
+* {
+    /* FiraCode Nerd Font first: it is the only installed face that actually
+       carries the Material-Design PUA glyphs the modules use (Hack Nerd Font
+       falls through per-glyph and mixes metrics). */
+    font-family: "FiraCode Nerd Font", "Hack Nerd Font", "Noto Sans", monospace;
+    font-size: 12px;
+    font-weight: 500;
+    min-height: 0;
+    padding: 0;
+    border: none;
+}
+
+/*  the bar is one continuous surface docked to the top edge: square top
+    corners (it melts into the ceiling), rounded bottom corners             */
+window#waybar {
+    background-color: rgba(26, 27, 38, 0.92);
+    color: @fg;
+    border: 1px solid rgba(125, 207, 255, 0.22);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-top: none;
+    padding: 0 12px;
+}
+
+window#waybar.hidden {
+    opacity: 0.12;
+}
+
+window#waybar.empty,
+window#waybar.solo {
+    background-color: transparent;
+}
+
+/* --- the capsule -------------------------------------------------------- */
+
+/* --- the modules -------------------------------------------------------- */
+/*  flat inside the bar surface; only the hover state paints a capsule      */
+
+#workspaces button,
+#mode,
+#custom-media,
+#idle_inhibitor,
+#pulseaudio,
+#network,
+#bluetooth,
+#custom-stats,
+#battery,
+#custom-clock,
+#custom-power {
+    background-color: transparent;
+    border: none;
+    border-radius: 999px;
+    box-shadow: none;
+    padding: 3px 10px;
+    margin: 0;
+    color: @fg;
+    transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+#custom-media:hover,
+#idle_inhibitor:hover,
+#pulseaudio:hover,
+#network:hover,
+#bluetooth:hover,
+#custom-stats:hover,
+#battery:hover,
+#custom-clock:hover,
+#custom-power:hover {
+    background-color: @pill-hov;
+}
+
+label:focus,
+label:active,
+label:hover {
+    background-color: inherit;
+    box-shadow: none;
+}
+
+/* --- workspaces --------------------------------------------------------- */
+/*  classes added by the hyprland module: active / urgent / hidden           */
+
+#workspaces {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+
+#workspaces button {
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    color: @dim;
+    min-width: 22px;
+    padding: 3px 9px;
+    margin: 0 1px;
+    font-weight: 600;
+    transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+#workspaces button:hover {
+    background-color: @pill-hov;
+    color: @fg;
+}
+
+#workspaces button.active {
+    background-color: transparent;
+    border-color: transparent;
+    color: @fg;
+    font-weight: 700;
+}
+
+#workspaces button.urgent {
+    background-color: transparent;
+    border-color: transparent;
+    color: @red;
+}
+
+#workspaces button.hidden {
+    color: @mute;
+}
+
+/* --- mode (replaces the Hyprland submap module) ------------------------------------------------------------- */
+/*  the active mode becomes a class: #mode.floating, #mode.tabbed          */
+
+#mode {
+    color: @yellow;
+    font-size: 10px;
+    letter-spacing: 0.4px;
+}
+
+/* --- window title ------------------------------------------------------- */
+
+#window {
+    background-color: transparent;
+    border: none;
+    color: @fg;
+    padding: 0 6px;
+    opacity: 0.8;
+}
+
+/* --- media -------------------------------------------------------------- */
+/*  state is carried by the icon tint from config.jsonc, not by a border     */
+
+/* --- audio -------------------------------------------------------------- */
+/*  classes: muted / sink-muted / source-muted / bluetooth                  */
+
+#pulseaudio.muted,
+#pulseaudio.sink-muted {
+    color: @mute;
+}
+
+#pulseaudio.bluetooth {
+    color: @accent;
+}
+
+#pulseaudio.source-muted {
+    opacity: 0.6;
+}
+
+/* --- network ------------------------------------------------------------ */
+/*  classes: wifi / ethernet / linked / disconnected / disabled             */
+
+#network.wifi,
+#network.ethernet {
+    color: @dim;
+}
+
+#network.linked,
+#network.disconnected,
+#network.disabled {
+    color: @mute;
+}
+
+/* --- bluetooth ---------------------------------------------------------- */
+/*  classes: on / off / connected / no-controller / disabled                */
+
+#bluetooth {
+    color: @mute;
+    padding: 3px 9px;
+}
+
+#bluetooth.on,
+#bluetooth.connected {
+    color: @accent;
+}
+
+#bluetooth.discovering {
+    color: @cyan;
+}
+
+/* --- stats -------------------------------------------------------------- */
+
+#custom-stats {
+    font-size: 11px;
+    color: @dim;
+}
+
+#custom-stats.warm {
+    color: @yellow;
+}
+
+#custom-stats.hot {
+    color: @red;
+}
+
+/* --- battery ------------------------------------------------------------ */
+/*  classes: charging / discharging / full / not-charging / unknown        */
+/*  window#waybar also gets battery-critical / battery-warning             */
+
+#battery {
+    color: @yellow;
+}
+
+#battery.charging,
+#battery.full {
+    color: @green;
+}
+
+#battery.discharging,
+#battery.not-charging {
+    color: @yellow;
+}
+
+#battery.unknown {
+    color: @mute;
+}
+
+@keyframes warning-pulse {
+    50% { color: @red; }
+}
+
+#battery.charging,
+#battery.full,
+#battery.not-charging {
+    animation: none;
+}
+
+window#waybar.battery-critical #battery {
+    animation: warning-pulse 1.6s ease-in-out infinite;
+    color: @red;
+}
+
+/* --- tray --------------------------------------------------------------- */
+
+#tray {
+    background-color: transparent;
+    border: none;
+    padding: 0 4px;
+    margin: 0;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+    opacity: 0.55;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+}
+
+/* --- clock -------------------------------------------------------------- */
+
+#custom-clock {
+    color: @fg;
+    font-weight: 600;
+}
+
+#custom-clock.weekend {
+    color: #bb9af7;
+}
+
+/* --- power -------------------------------------------------------------- */
+
+#custom-power {
+    color: @red;
+    padding: 3px 10px;
+}
+
+#custom-power:hover {
+    background-color: rgba(247, 118, 142, 0.18);
+    color: @red;
+}

@@ -1,0 +1,213 @@
+// ---------------------------------------------------------------------------
+//  waybar — Tokyo Night, floating pills, sway
+//
+//  Notes on this machine (Alpine, waybar 0.15.0):
+//   * custom/ modules only know "exec"/"exec-if" — there is no "script" key,
+//     and "exec" is not run through a shell, so paths must be absolute
+//   * the vendored fmt only accepts a bare "{}" in the clock/window/submap
+//     formats, so the clock is a custom module (scripts/clock.py)
+//   * glyphs come from "FiraCode Nerd Font" (the only installed face with the
+//     Material-Design PUA range); the <span> markup keeps the icon colours,
+//     the colours themselves live in style.css
+// ---------------------------------------------------------------------------
+{
+    "layer": "top",
+    "position": "top",
+    "height": 34,
+    "spacing": 4,
+    "margin": "0px 120px 0px 120px",
+    "reload_style_on_change": true,
+    "on-sigusr1": "toggle",
+    "on-sigusr2": "reload",
+
+    "modules-left": [
+        "sway/workspaces",
+        "sway/mode",
+        "custom/stats",
+        "network",
+        "battery"
+    ],
+    "modules-center": [
+        "custom/clock"
+    ],
+    "modules-right": [
+        "custom/media",
+        "idle_inhibitor",
+        "pulseaudio",
+        "bluetooth",
+        "sway/window",
+        "tray",
+        "custom/power"
+    ],
+
+    // ------------------------------------------------------------------ left
+    // NOTE: "sort-by-number" is deprecated on this build (waybar 0.15.0 logs
+    // "[ext/workspaces]: Prefer sort-by-id instead of sort-by-number") and
+    // sway/workspaces never had it. sort-by-id is the replacement.
+    "sway/workspaces": {
+        "disable-scroll": false,
+        "all-outputs": true,
+        "sort-by-id": true,
+        "format": "{name}",
+        "on-click": "activate",
+        "tooltip": true,
+        "tooltip-format": "<b>Workspace {name}</b>"
+    },
+
+    // hidden by waybar while the default mode (tiled) is active; the active
+    // mode is added as a CSS class (#mode.floating, #mode.tabbed, ...)
+    "sway/mode": {
+        "format": "{}",
+        "always-on": false
+    },
+
+    // ---------------------------------------------------------------- center
+    // "separate-icon" is not a sway/window option (it was a Hyprland window
+    // thing and is absent from this waybar build), so it is dropped here.
+    "sway/window": {
+        "format": "<span foreground='#7dcfff'>{}</span>",
+        "max-length": 60,
+        "tooltip": true
+    },
+
+    // ----------------------------------------------------------------- media
+    "custom/media": {
+        "format": "{text}",
+        "return-type": "json",
+        "interval": 1,
+        "exec": "/home/otiko/.config/waybar/scripts/media.py",
+        "on-click": "playerctl play-pause",
+        "on-scroll-up": "playerctl next",
+        "on-scroll-down": "playerctl previous",
+        "tooltip": true
+    },
+
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "<span foreground='#9ece6a'>&#xf204;</span>",
+            "deactivated": "<span foreground='#414868'>&#xf28a;</span>"
+        },
+        "on-click": "toggle",
+        "tooltip": true,
+        "tooltip-format": "<b>Screen inhibitor</b>\nCurrently {status}\nClick to toggle"
+    },
+
+    // ----------------------------------------------------------------- audio
+    "pulseaudio": {
+        "format": "<span foreground='#f7768e'>{icon}</span> {volume}%",
+        "format-muted": "<span foreground='#414868'>&#xf026;</span> muted",
+        "format-icons": {
+            "headphone": "<span foreground='#f7768e'>&#xf025;</span>",
+            "headset": "<span foreground='#f7768e'>&#xf025;</span>",
+            "hands-free": "<span foreground='#f7768e'>&#xf025;</span>",
+            "portable": "<span foreground='#f7768e'>&#xf025;</span>",
+            "phone": "<span foreground='#f7768e'>&#xf025;</span>",
+            "car": "<span foreground='#f7768e'>&#xf025;</span>",
+            "hifi": "<span foreground='#f7768e'>&#xf0950;</span>",
+            "hdmi": "<span foreground='#f7768e'>&#xf0950;</span>",
+            "speaker": "<span foreground='#f7768e'>&#xf0950;</span>",
+            "default-muted": "<span foreground='#414868'>&#xf026;</span>",
+            "default": [
+                "<span foreground='#414868'>&#xf0954;</span>",
+                "<span foreground='#414868'>&#xf0950;</span>",
+                "<span foreground='#f7768e'>&#xf0950;</span>"
+            ]
+        },
+        "on-click": "pavucontrol",
+        "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-scroll-up": "wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-",
+        "tooltip": true,
+        "tooltip-format": "<b>{desc}</b>\nVolume: {volume}%\nMic: {source_volume}% ({source_desc})"
+    },
+
+    // --------------------------------------------------------------- network
+    "network": {
+        "interface": "wlan0",
+        "format-wifi": "<span foreground='#7dcfff'>{icon}</span> <span foreground='#565f89'>{signalStrength}%</span>",
+        "format-ethernet": "<span foreground='#7dcfff'>&#xf0be;</span> <span foreground='#565f89'>{ipaddr}</span>",
+        "format-linked": "<span foreground='#414868'>&#xf0be;</span>",
+        "format-disconnected": "<span foreground='#414868'>&#xf026;</span>",
+        "format-disabled": "<span foreground='#414868'>&#xf026;</span>",
+        "tooltip-format": "<b>{essid}</b>\n{ipaddr}/{cidr} via {gwaddr}\n&#xf0be; {bandwidthDownBits} &#xf0e7; {bandwidthUpBits}",
+        "tooltip-format-disconnected": "<b>{ifname}</b>\nnot connected",
+        "tooltip-format-linked": "<b>{ifname}</b>\nlinked, no address"
+    },
+
+    "bluetooth": {
+        "format": "<span foreground='#7aa2f7'>&#xf293;</span>",
+        "format-off": "<span foreground='#414868'>&#xf294;</span>",
+        "format-disabled": "<span foreground='#414868'>&#xf293;</span>",
+        "format-on": "<span foreground='#7aa2f7'>&#xf294;</span>",
+        "format-connected": "<span foreground='#7aa2f7'>&#xf293;</span> {device_alias}",
+        "format-no-controller": "",
+        "max-length": 20,
+        "tooltip": true,
+        "tooltip-format": "<b>Bluetooth</b> — {status}\n{controller_alias}",
+        "tooltip-format-connected": "<b>{device_alias}</b>\n{controller_alias} · {num_connections} connected"
+    },
+
+    // ----------------------------------------------------------------- stats
+    "custom/stats": {
+        "format": "{text}",
+        "return-type": "json",
+        "interval": 2,
+        "exec": "/home/otiko/.config/waybar/scripts/stats.py",
+        "on-click": "btop",
+        "tooltip": true
+    },
+
+    "battery": {
+        "bat": "BAT1",
+        "format": "<span foreground='#e0af68'>{icon}</span> {capacity}%",
+        "format-full": "<span foreground='#9ece6a'>{icon}</span> {capacity}%",
+        "format-charging": "<span foreground='#9ece6a'>{icon}</span> {capacity}% <span foreground='#414868'>&#xf0e7;</span>",
+        "format-plugged": "<span foreground='#e0af68'>{icon}</span> {capacity}% <span foreground='#414868'>&#xf0e7;</span>",
+        "format-alt": "<span foreground='#e0af68'>{icon}</span> {time}",
+        "format-icons": [
+            "<span foreground='#f7768e'>&#xf241;</span>",
+            "<span foreground='#f7768e'>&#xf243;</span>",
+            "<span foreground='#e0af68'>&#xf242;</span>",
+            "<span foreground='#e0af68'>&#xf244;</span>",
+            "<span foreground='#9ece6a'>&#xf240;</span>"
+        ],
+        "states": {
+            "warning": 40,
+            "critical": 20
+        },
+        "tooltip": true,
+        "tooltip-format": "<b>Battery {capacity}%</b>\n{timeTo}\n<tt>power {power} W</tt>"
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 6,
+        "tooltip": true
+    },
+
+    // ----------------------------------------------------------------- clock
+    "custom/clock": {
+        "format": "{text}",
+        "return-type": "json",
+        "interval": 1,
+        "exec": "/home/otiko/.config/waybar/scripts/clock.py",
+        "tooltip": true
+    },
+
+    // ----------------------------------------------------------------- power
+    "custom/power": {
+        "format": "<span foreground='#f7768e'>&#xf011;</span>",
+        "on-click": "menu",
+        "menu": "on-click",
+        "menu-file": "/home/otiko/.config/waybar/power_menu.xml",
+        "menu-actions": {
+            "logout": "/home/otiko/.config/waybar/scripts/power.sh logout",
+            "suspend": "/home/otiko/.config/waybar/scripts/power.sh suspend",
+            "reboot": "/home/otiko/.config/waybar/scripts/power.sh reboot",
+            "poweroff": "/home/otiko/.config/waybar/scripts/power.sh poweroff"
+        },
+        "tooltip": true,
+        "tooltip-format": "<b>Session</b>\nlogout \u00b7 suspend \u00b7 reboot \u00b7 power off"
+    }
+}

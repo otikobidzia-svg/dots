@@ -1,0 +1,116 @@
+// Inspired by Catnap
+{
+    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+    "logo": {
+        "type": "file",
+        "source": "~/.config/fastfetch/logo.txt",
+        "padding": {
+            "top": 1
+        }
+    },
+    "display": {
+        "separator": " " // keep single-line separator to preserve your box look
+    },
+    "modules": [
+        { "type": "custom", "key": "╭───────────╮" },
+
+        {
+            "type": "title",
+            "key": "│  user    {#keys}│",
+            "format": "{user-name}"
+        },
+        {
+            "type": "title",
+            "key": "│ 󰇅 hname   {#keys}│",
+            "format": "{host-name}"
+        },
+        {
+            "type": "uptime",
+            "key": "│ 󰅐 uptime  {#keys}│"
+        },
+        {
+            "type": "os",
+            "key": "│ {icon} distro  {#keys}│",
+            "format": "Alpine"
+        },
+        {
+            "type": "kernel",
+            "key": "│  kernel  {#keys}│"
+        },
+        {
+            "type": "wm",
+            "key": "│  wm      {#keys}│",
+            "format": "{pretty-name}"
+        },
+        {
+            "type": "de",
+            "key": "│ 󰇄 desktop {#keys}│"
+        },
+        {
+            "type": "terminal",
+            "key": "│  term    {#keys}│"
+        },
+        {
+            "type": "shell",
+            "key": "│  shell   {#keys}│"
+        },
+        {
+            "type": "cpu",
+            "key": "│ 󰍛 cpu     {#keys}│",
+            "format": "Intel i5"
+        },
+        {
+            "type": "disk",
+            "key": "│ 󰉉 disk    {#keys}│",
+            "folders": "/",
+            "format": "{size-used} / {size-total} ({size-percentage})"
+        },
+        {
+            "type": "command",
+            "key": "│  memory  {#keys}│",
+            "text": "awk '/MemTotal/{t=$2} /MemAvailable/{a=$2} END{printf \"%.1f GB / %.1f GB (%.0f%%)\", (t-a)/1048576, t/1048576, (t-a)/t*100}' /proc/meminfo"
+        },
+        {
+            "type": "command",
+            "key": "│ 󰍹 gpu     {#keys}│",
+            "text": "echo RTX 3050 ti"
+        },
+        {
+            "type": "packages",
+            "key": "│ 󰚺 pkgs    {#keys}│"
+        },
+        { "type": "custom", "key": "╰───────────╯" }
+
+        /* -----------------------------
+           Optional modules — uncomment one at a time
+           if you want them (safe; they won't run while commented).
+           Uncomment only if you're sure your fastfetch build supports them.
+           -----------------------------
+        ,
+
+        // GPU (uncomment if your fastfetch supports the 'gpu' module)
+        {
+            "type": "gpu",
+            "key": "│ 󰍹 gpu     {#keys}│"
+        }
+
+        // Battery (only shows on laptops if supported)
+        ,
+        {
+            "type": "battery",
+            "key": "│  battery {#keys}│"
+        }
+
+        // Packages (uncomment if supported by your fastfetch version)
+        ,
+        */
+
+        // Screen resolution (uncomment if 'resolution' module exists)
+        /*,
+        {
+            "type": "resolution",
+            "key": "│  screen  {#keys}│"
+        }
+        */
+    ]
+}

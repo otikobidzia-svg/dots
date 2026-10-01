@@ -1,0 +1,292 @@
+window {
+  background-color: #0d0e13;
+  background-image: linear-gradient(180deg, #14161e 0%, #0a0b10 100%);
+  color: #e8eaf2;
+}
+
+window.csd {
+  box-shadow: 0 12px 44px rgba(0, 0, 0, 0.62);
+}
+
+button {
+  background-color: #191c26;
+  background-image: linear-gradient(180deg, #1f2331 0%, #171a23 100%);
+  border: 1px solid #2a2f3e;
+  border-radius: 10px;
+  color: #e3e6f0;
+  padding: 6px 14px;
+  min-height: 18px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  transition: all 140ms ease-out;
+}
+
+button:hover {
+  background-color: #222736;
+  background-image: linear-gradient(180deg, #2a3043 0%, #1e222e 100%);
+  border-color: #3b4358;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+button:active {
+  background-color: #14161e;
+  background-image: linear-gradient(180deg, #161923 0%, #1d2130 100%);
+  border-color: #22d3ee;
+  color: #ffffff;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.55);
+}
+
+button:disabled {
+  background-color: #14161d;
+  background-image: none;
+  border-color: #232734;
+  color: #565b6b;
+  box-shadow: none;
+}
+
+grid > button {
+  background-color: transparent;
+  background-image: none;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  color: inherit;
+  padding: 0;
+  margin: 3px;
+  box-shadow: none;
+  transition: all 140ms ease-out;
+}
+
+grid > button:hover {
+  background-color: rgba(34, 211, 238, 0.08);
+  background-image: none;
+  border-color: rgba(34, 211, 238, 0.60);
+  color: inherit;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+
+grid > button:active {
+  background-color: rgba(34, 211, 238, 0.16);
+  border-color: #22d3ee;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+grid > button.highlighted-button {
+  background-color: rgba(34, 211, 238, 0.10);
+  background-image: none;
+  border-color: #22d3ee;
+  color: inherit;
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.30), 0 10px 28px rgba(34, 211, 238, 0.16);
+}
+
+entry {
+  background-color: #0f1117;
+  background-image: none;
+  border: 1px solid #262a36;
+  border-radius: 9px;
+  color: #e8eaf2;
+  caret-color: #22d3ee;
+  padding: 6px 10px;
+  min-height: 18px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.55);
+  transition: all 140ms ease-out;
+  -GtkEntry-shadow: none;
+  -GtkEntry-icon-size: 14px;
+}
+
+entry:hover {
+  border-color: #363c4d;
+}
+
+entry:focus {
+  background-color: #12141c;
+  border-color: #22d3ee;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.55), 0 0 0 3px rgba(34, 211, 238, 0.18);
+}
+
+combobox {
+  background-color: #191c26;
+  background-image: linear-gradient(180deg, #1f2331 0%, #171a23 100%);
+  border: 1px solid #2a2f3e;
+  border-radius: 10px;
+  color: #e3e6f0;
+  padding: 0;
+  min-height: 20px;
+  transition: all 140ms ease-out;
+}
+
+combobox:hover {
+  background-color: #222736;
+  background-image: linear-gradient(180deg, #2a3043 0%, #1e222e 100%);
+  border-color: #3b4358;
+}
+
+combobox:focus {
+  border-color: #22d3ee;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.18);
+}
+
+combobox arrow {
+  color: #22d3ee;
+  min-width: 24px;
+  min-height: 18px;
+}
+
+menu, popover > contents {
+  background-color: #14161e;
+  background-image: linear-gradient(180deg, #181b25 0%, #101219 100%);
+  border: 1px solid #2b3040;
+  border-radius: 13px;
+  padding: 6px;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.6);
+}
+
+menuitem {
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  color: #d9dce7;
+  padding: 7px 12px;
+  min-width: 190px;
+  transition: all 110ms ease-out;
+}
+
+menuitem:hover {
+  background-color: rgba(34, 211, 238, 0.14);
+  background-image: none;
+  border-color: rgba(34, 211, 238, 0.38);
+  color: #ffffff;
+}
+
+menuitem:disabled {
+  color: #565b6b;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+menuseparator {
+  background-color: #262a36;
+  border: none;
+  margin: 5px 9px;
+}
+
+checkmenuitem check, radiocheck {
+  background-color: #0f1117;
+  border: 1px solid #2a2f3e;
+  border-radius: 5px;
+  min-width: 15px;
+  min-height: 15px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+checkmenuitem check:checked, radiocheck:checked {
+  background-color: #22d3ee;
+  border-color: #22d3ee;
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.55);
+}
+
+checkmenuitem:checked, radio menuitem:checked {
+  color: #22d3ee;
+}
+
+tooltip {
+  background-color: #1b1e29;
+  background-image: none;
+  border: 1px solid #343a4d;
+  border-radius: 9px;
+  color: #e8eaf2;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
+  padding: 5px 9px;
+}
+
+tooltip label {
+  color: #e8eaf2;
+}
+
+scrollbar {
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  -GtkScrollbar-slider-min-width: 8px;
+  -GtkScrollbar-slider-max-width: 8px;
+  -GtkScrollbar-spacing: 0;
+  -GtkScrolledWindow-scrollbar-spacing: 0;
+  margin: 2px;
+}
+
+scrollbar slider {
+  background-color: #2c3242;
+  background-image: none;
+  border: none;
+  border-radius: 8px;
+  box-shadow: none;
+  min-width: 8px;
+  min-height: 42px;
+  margin: 2px;
+  transition: all 120ms ease-out;
+}
+
+scrollbar slider:hover {
+  background-color: #22d3ee;
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.45);
+}
+
+scrollbar.horizontal slider {
+  min-height: 8px;
+  min-width: 42px;
+}
+
+separator {
+  background-color: #262a36;
+  border: none;
+  min-height: 1px;
+  min-width: 1px;
+}
+
+frame {
+  border: 1px solid #262a36;
+  border-radius: 12px;
+  box-shadow: none;
+  margin: 6px;
+}
+
+colorbutton {
+  background-image: linear-gradient(180deg, #1f2331 0%, #171a23 100%);
+  border: 1px solid #2a2f3e;
+  border-radius: 10px;
+  padding: 3px;
+  min-height: 20px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  transition: all 140ms ease-out;
+}
+
+colorbutton:hover {
+  background-color: #222736;
+  border-color: #3b4358;
+}
+
+colorbutton > drawingarea {
+  border-radius: 7px;
+  border: 1px solid rgba(0, 0, 0, 0.55);
+  min-width: 34px;
+  min-height: 20px;
+}
+
+progressbar trough {
+  background-color: #0f1117;
+  border: 1px solid #262a36;
+  border-radius: 7px;
+  min-height: 8px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+progressbar progress {
+  background-color: #22d3ee;
+  border-radius: 7px;
+  min-height: 8px;
+}
+
+selected, treeview selected, textview text:selected {
+  background-color: #0e7490;
+  color: #ffffff;
+}

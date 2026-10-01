@@ -1,0 +1,27 @@
+//@theme "~/.config/rofi/theme.rasi"
+
+configuration {
+    font: "Hack Nerd Font Mono 12";
+
+    show-icons: true;
+    click-to-exit: true;
+    fixed-num-lines: true;
+    hover-select: false;
+    scroll-method: 0;
+    matching: "normal";
+    tokenize: true;
+    case-sensitive: false;
+    case-smart: true;
+    sort: false;
+
+    display-drun: "";
+    drun-show-actions: false;
+    drun-display-format: "{name}";
+
+    terminal: "kitty";
+
+    kb-primary-paste: "Control+V,Shift+Insert";
+    kb-secondary-paste: "Control+v,Insert";
+    kb-cancel: "Escape";
+}
+@theme "/usr/share/rofi/themes/arthur.rasi"

@@ -1,0 +1,141 @@
+* {
+    font: "Hack Nerd Font Mono 12";
+
+    background:            #0D0F18;
+    foreground:            #E7EAF3;
+    background-color:      #0D0F18;
+    border-color:          rgba(37, 201, 251, 28%);
+    separatorcolor:        rgba(37, 201, 251, 28%);
+    scrollbar-handle:      #25C9FB;
+
+    normal-background:           transparent;
+    normal-foreground:           #E7EAF3;
+    alternate-normal-background: transparent;
+    alternate-normal-foreground: #E7EAF3;
+    selected-normal-background:  rgba(37, 201, 251, 16%);
+    selected-normal-foreground:  #A6E3A1;
+
+    active-background:           #25C9FB;
+    active-foreground:           #0D0F18;
+    alternate-active-background: transparent;
+    alternate-active-foreground: #E7EAF3;
+    selected-active-background:  #25C9FB;
+    selected-active-foreground:  #0D0F18;
+
+    urgent-background:           #FF5C7A;
+    urgent-foreground:           #0D0F18;
+    alternate-urgent-background: transparent;
+    alternate-urgent-foreground: #FF5C7A;
+    selected-urgent-background:  #FF5C7A;
+    selected-urgent-foreground:  #0D0F18;
+}
+
+window {
+    location: center;
+    anchor: center;
+
+    width: 680px;
+    padding: 14px;
+    margin: 0px;
+
+    border: 1px;
+    border-radius: 22px;
+    border-color: rgba(37, 201, 251, 28%);
+    background-color: rgba(13, 15, 24, 92%);
+}
+
+mainbox {
+    orientation: vertical;
+    spacing: 12px;
+    children: [ inputbar, listview, message ];
+}
+
+inputbar {
+    background-color: rgba(23, 27, 42, 95%);
+    border-radius: 14px;
+    padding: 10px 16px;
+    spacing: 12px;
+    children: [ prompt, entry ];
+}
+
+prompt {
+    expand: false;
+    str: "> ";
+    text-color: #A6E3A1;
+    font: "Hack Nerd Font Mono 12";
+}
+
+entry {
+    font: "Hack Nerd Font Mono 12";
+    text-color: #FFFFFF;
+    cursor: text;
+    vertical-align: 0.5;
+}
+
+listview {
+    orientation: vertical;
+    columns: 1;
+    lines: 8;
+    dynamic: true;
+    spacing: 5px;
+    padding: 2px;
+    scrollbar: false;
+}
+
+element {
+    border-radius: 12px;
+    padding: 10px 14px;
+    spacing: 12px;
+}
+
+element.normal.normal {
+    background-color: transparent;
+    text-color: #E7EAF3;
+}
+
+element.normal.urgent {
+    background-color: transparent;
+    text-color: #FF5C7A;
+}
+
+element.normal.active {
+    background-color: transparent;
+    text-color: #A6E3A1;
+}
+
+element.alternate.normal {
+    background-color: transparent;
+    text-color: #E7EAF3;
+}
+
+element.selected.normal,
+element.selected.active,
+element.selected.urgent {
+    background-color: rgba(37, 201, 251, 16%);
+    border-radius: 12px;
+    text-color: #A6E3A1;
+}
+
+element-icon {
+    size: 1.1em;
+    text-color: #A6E3A1;
+}
+
+element-text {
+    vertical-align: 0.5;
+}
+
+scrollbar {
+    width: 4px;
+    border: 0;
+    handle-width: 12px;
+    handle-color: #25C9FB;
+    background-color: transparent;
+}
+
+message {
+    background-color: rgba(255, 92, 122, 12%);
+    border-radius: 12px;
+    padding: 8px 12px;
+    text-color: #FF8BA0;
+}
